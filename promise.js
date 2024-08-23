@@ -17,6 +17,37 @@ class Queue {
     }
 }
 
+
+const queue = new Queue();
+
+queue.enqueue(
+    new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('Promesa 1');
+        }, 2000);
+    })
+);
+
+queue.enqueue(
+    new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve('Promesa 2');
+        }, 3000);
+    })
+);
+
+run();
+
+async function run(){
+    while (!queue.isEmpty()) {
+        const fn = queue.dequeue();
+        const data = await fn;
+        console.log(data);
+    }
+}
+
+
+/*
 // Como funcionan las promesas en JS (no tiene nada que ver con arriba es solamente para saber como funcionan las promesas)
 const promise = new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -33,4 +64,4 @@ promise.then(res => console.log(res));
     const res = await promise;
     console.log(res);
 })();
-
+*/
