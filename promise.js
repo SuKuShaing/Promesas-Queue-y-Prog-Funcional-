@@ -33,17 +33,18 @@ function promiseWaiting(time, message){
 
 const queue = new Queue();
 
-queue.enqueue(promiseWaiting(2000, 'Promesa 1'));
-queue.enqueue(promiseWaiting(1000, 'Promesa 2'));
+queue.enqueue([promiseWaiting(2000, 'Promesa 1'), (data) => console.log(data)]);
+queue.enqueue([promiseWaiting(2000, 'Promesa 2'), (data) => console.log(data)]);
+queue.enqueue([promiseWaiting(2000, 'Promesa 3'), (data) => console.log(data)]);
 
 
 // Desencolar las funciones guardadas en la cola
 run();
 async function run(){
     while (!queue.isEmpty()) {
-        const fn = queue.dequeue();
-        const data = await fn(); // se cambió de await fn a await fn() para que se ejecute la función
-        console.log(data);
+        const res = queue.dequeue();
+        const data = await res[0](); // ahora res[0] es quien recibe la función y la ejecuta
+        res[1](data); // ejecuta la 2da función con el resultado que de la 1ra
     }
 }
 
